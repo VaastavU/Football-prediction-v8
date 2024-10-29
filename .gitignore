@@ -1,0 +1,18 @@
+# Ignore output videos directory
+output_videos/
+
+# Ignore prediction directories
+runs/detect/predict/
+runs/detect/predict3/
+runs/detect/predict4/
+runs/detect/predict5/
+runs/detect/predict6/
+
+# Ignore weights files
+runs/detect/train2/weights/best.pt
+runs/detect/train3/weights/best.pt
+runs/detect/train4/weights/best.pt
+
+# Ignore large model files
+training/yolov5xu.pt
+yolov8x.pt

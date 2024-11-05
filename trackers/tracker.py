@@ -1,18 +1,31 @@
+from utils import get_bbox_center, get_bbox_width
 from ultralytics import YOLO
 import supervision as sv
 import numpy as np
 import pickle   # used to create a byte stream of comples DS to reuse later without computing the whole thing again
                 # only used by python devs
+import pandas as pd
 import os
 import sys
 import cv2
 sys.path.append('../')
-from utils import get_bbox_center,get_bbox_width
+
 
 class Tracker:
     def __init__(self,model_path):
         self.model = YOLO(model_path)
         self.tracker = sv.ByteTrack()
+
+    def interpolate_ball_positions(self, ball_positions):
+        ball_positions = [x.get(1,{}).get('bbox',[]) for x in ball_positions]
+        df_ball_positions = pd.DataFrame(ball_positions, columns=['x1','y1','x2','y2'])
+
+        df_ball_positions = df_ball_positions.interpolate()
+        df_ball_positions = df_ball_positions.bfill()
+
+        ball_positions = [{1 : {'bbox': x}} for x in df_ball_positions.to_numpy().tolist()]
+
+        return ball_positions
 
     def detect_frames(self, frames):
         batch_size=20 
@@ -158,15 +171,19 @@ class Tracker:
             for track_id, player in player_dict.items():
                 color = player.get("team_color",(0,0,255))
                 frame = self.draw_ellipse(frame, player["bbox"],color, track_id)
+
+                if player.get('has_ball', False):
+                    frame = self.draw_triangle(frame,player['bbox'],(255,0,0))
+
             # Draw Referee
             for track_id, referee in referee_dict.items():
                 color = referee.get("team_color",(0,255,255))
                 frame = self.draw_ellipse(frame, referee["bbox"],color)
-            # Draw Ball
+
+             # Draw ball 
             for track_id, ball in ball_dict.items():
-                color = ball.get("team color",(0,255,0))
-                frame = self.draw_triangle(frame, ball["bbox"], color)
-            
+                frame = self.draw_triangle(frame, ball["bbox"],(0,255,0))
+
             # append frames to the output
             output_video_frames.append(frame)
 

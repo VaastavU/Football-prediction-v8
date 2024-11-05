@@ -1,4 +1,4 @@
-### Football Analysis Project
+# Football Analysis Project
 # Overview
 This project aims to detect and track players, referees, and the football in video footage of football matches using YOLO (You Only Look Once), a powerful AI object detection model. Through this project, we delve into advanced techniques in computer vision and machine learning to extract meaningful insights from raw video data. By employing K-means clustering, optical flow, and perspective transformation, we enhance the model's ability to accurately measure player movements, team ball possession, and other crucial in-game metrics.
 

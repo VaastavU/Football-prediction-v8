@@ -35,6 +35,7 @@ class CameraMovementEstimator():
             mask=mask_features        # Mask specifying regions for feature tracking
         )
 
+
     def add_adjust_positions_to_tracks(self, tracks, camera_movement_per_frame):
         # Adjust positions in object tracks based on detected camera movement
         for object, object_tracks in tracks.items():

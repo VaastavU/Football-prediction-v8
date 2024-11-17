@@ -17,13 +17,18 @@ def main():
                                        read_from_stub=True,
                                        stub_path='stubs/track_stubs.pkl')
     
+    # get object positions 
+    tracker.add_positions_to_tracks(tracks=tracks)
+    
     # camera movement calculation
 
     camera_movement_estimator = CameraMovementEstimator(video_frames[0])
     camera_movement_per_frame = camera_movement_estimator.get_camera_movement(video_frames,
                                                                               read_from_stub=True,
                                                                               stub_path='stubs/camera_movement_stub.pkl')
-    
+    # add adjusted positions according to the camera movement
+    camera_movement_estimator.add_adjust_positions_to_tracks(tracks=tracks, camera_movement_per_frame=camera_movement_per_frame)
+
     # interpolate ball positions
     tracks['ball'] = tracker.interpolate_ball_positions(ball_positions=tracks['ball'])
 

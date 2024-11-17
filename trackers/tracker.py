@@ -1,4 +1,4 @@
-from utils import get_bbox_center, get_bbox_width
+from utils import get_bbox_center, get_bbox_width, get_foot_position
 from ultralytics import YOLO
 import supervision as sv
 import numpy as np
@@ -15,6 +15,18 @@ class Tracker:
     def __init__(self,model_path):
         self.model = YOLO(model_path)
         self.tracker = sv.ByteTrack()
+
+    def add_positions_to_tracks(self, tracks):
+        for object, object_track in tracks.items():
+            for frame_num, track in enumerate(object_track):
+                for track_id, track_info in track.items():
+                    bbox = track_info['bbox']
+                    if object == 'ball':
+                        position = get_bbox_center(bbox=bbox)
+                    else:
+                        position = get_foot_position(bbox=bbox)
+                    tracks[object][frame_num][track_id]['position'] = position
+
 
     def interpolate_ball_positions(self, ball_positions):
         ball_positions = [x.get(1,{}).get('bbox',[]) for x in ball_positions]

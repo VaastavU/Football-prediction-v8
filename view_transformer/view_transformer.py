@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-class ViewTransformer:
+class ViewTransformer():
     def __init__(self):
         court_length = 23.32
         court_width = 68
